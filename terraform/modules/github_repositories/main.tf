@@ -12,9 +12,9 @@ resource "github_repository" "repo" {
   has_wiki          = true
   has_downloads     = true
 
-  # Merge strategies
-  allow_merge_commit = true
-  allow_squash_merge = true
+  # Merge strategies - only allow rebase merges as per requirements
+  allow_merge_commit = false
+  allow_squash_merge = false
   allow_rebase_merge = true
   allow_auto_merge   = true
   delete_branch_on_merge = true
