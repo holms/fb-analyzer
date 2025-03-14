@@ -63,9 +63,29 @@ services:
       - mysql
       - redis
     environment:
+      # Database connection
       - DATABASE_URL=mysql://user:password@mysql:3306/fb_analyzer
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_NAME=fb_analyzer
+      - DB_USER=user
+      - DB_PASSWORD=password
+      
+      # Redis connection
       - REDIS_URL=redis://redis:6379
-      - FACEBOOK_API_KEY=${FACEBOOK_API_KEY}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      
+      # Facebook API credentials
+      - FACEBOOK_APP_ID=${FACEBOOK_APP_ID}
+      - FACEBOOK_APP_SECRET=${FACEBOOK_APP_SECRET}
+      - FACEBOOK_ACCESS_TOKEN=${FACEBOOK_ACCESS_TOKEN}
+      
+      # Service configuration
+      - LOG_LEVEL=info
+      - FETCH_INTERVAL=3600  # Fetch events every hour (in seconds)
+      - MAX_PAGES_PER_FETCH=10
+      - MAX_EVENTS_PER_PAGE=100
     networks:
       - fb-analyzer-network
     labels:
@@ -126,8 +146,17 @@ services:
   fb-analyzer-frontend:
     build:
       context: ./services/fb-analyzer-frontend
+    environment:
+      - REACT_APP_API_BASE_URL=http://event-fetcher.fb-analyzer.localhost
+      - REACT_APP_FACEBOOK_API_VERSION=v18.0
+      - REACT_APP_FACEBOOK_APP_ID=${FACEBOOK_APP_ID}
+    volumes:
+      - ./services/fb-analyzer-frontend:/app
+      - /app/node_modules
     networks:
       - fb-analyzer-network
+    depends_on:
+      - fb-analyzer-event-fetcher
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.frontend.rule=Host(`fb-analyzer.localhost`)"
