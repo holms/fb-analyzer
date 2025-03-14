@@ -147,7 +147,7 @@ services:
     build:
       context: ./services/fb-analyzer-frontend
     environment:
-      - REACT_APP_API_BASE_URL=http://event-fetcher.fb-analyzer.localhost
+      - REACT_APP_API_BASE_URL=http://api.fb-analyzer.localhost/api
       - REACT_APP_FACEBOOK_API_VERSION=v18.0
       - REACT_APP_FACEBOOK_APP_ID=${FACEBOOK_APP_ID}
     volumes:
@@ -156,7 +156,7 @@ services:
     networks:
       - fb-analyzer-network
     depends_on:
-      - fb-analyzer-event-fetcher
+      - fb-analyzer-api-gateway
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.frontend.rule=Host(`fb-analyzer.localhost`)"
