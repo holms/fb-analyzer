@@ -26,6 +26,7 @@ services:
     build:
       context: ./services/fb-analyzer-api-gateway
     depends_on:
+      - traefik
       - mysql
       - redis
     environment:
@@ -156,6 +157,7 @@ services:
     networks:
       - fb-analyzer-network
     depends_on:
+      - traefik
       - fb-analyzer-api-gateway
     labels:
       - "traefik.enable=true"
